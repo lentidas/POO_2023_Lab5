@@ -19,6 +19,8 @@
 
 package matrix;
 
+import java.util.Random;
+
 public class Matrix {
 
   private final int modulus;
@@ -27,22 +29,52 @@ public class Matrix {
   private int[][] matrixArray;
 
   Matrix() {
-    this(new int[0][0], 1);
+    this(new int[0][0], 1); // TODO Add unitary test
   }
 
-  Matrix(int nLines, int mColumns, int modulus) {
-    // TODO Add exception if modulus equals 0 or if nLines/mColumns is negative
+  public Matrix(int nLines, int mColumns, int modulus) {
+    if (modulus == 0) { // TODO Add unitary test
+      throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
+    }
+    if (nLines < 0 || mColumns < 0) { // TODO Add unitary test
+      throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
+    }
 
     this.modulus = modulus;
-    this.nLines = nLines;
-    this.mColumns = mColumns;
-    this.matrixArray = new int[nLines][mColumns];
-
-    // TODO Implement creation of random matrixArray
+    if (nLines == 0 || mColumns == 0) {
+      this.nLines = this.mColumns = 0;
+      this.matrixArray = new int[this.nLines][this.mColumns];
+    } else {
+      this.nLines = nLines;
+      this.mColumns = mColumns;
+      this.matrixArray = new int[this.nLines][this.mColumns];
+      Random randomInt = new Random();
+      for (int line = 0; line < nLines; ++line) {
+        for (int column = 0; column < mColumns; ++column) {
+          this.matrixArray[line][column] = randomInt.nextInt(modulus);
+        }
+      }
+    }
   }
 
-  Matrix(int[][] matrixArray, int modulus) {
-    // TODO Add exception if modulus equals 0
+  public Matrix(int[][] matrixArray, int modulus) {
+    if (modulus == 0) { // TODO Add unitary test
+      throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
+    }
+    for (int i = 0; i < matrixArray.length - 1; ++i) { // TODO Add unitary test
+      if (matrixArray[i].length != matrixArray[i + 1].length) {
+        throw new IllegalArgumentException(
+            "Invalid matrix array! Lines of the matrix are of different size.");
+      }
+    }
+    for (int[] line : matrixArray) { // TODO Add unitary test
+      for (int element : line) {
+        if (element < 0 || element >= modulus) {
+          throw new IllegalArgumentException(
+              "Invalid matrix array! Elements must be between 0 and modulus - 1.");
+        }
+      }
+    }
 
     this.nLines = matrixArray.length;
     this.mColumns = matrixArray[0].length;
@@ -51,11 +83,15 @@ public class Matrix {
   }
 
   Matrix(Matrix matrix) {
-    this(matrix, matrix.nLines, matrix.mColumns);
+    this(matrix, matrix.nLines, matrix.mColumns); // TODO Add unitary test
   }
 
-  Matrix(Matrix matrix, int newN, int newM) {
-    // TODO Add exception if nLines/mColumns is negative
+  public Matrix(Matrix matrix, int newN, int newM) {
+    if (newN < 0 || newM < 0) { // TODO Add unitary test
+      throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
+    }
+    // TODO Consider if we should add an exception in the case newN or newM are inferior to
+    //  matrix.nLines or matrix.mColumns or if we should accept it and reduce the matrix.
 
     nLines = newN;
     mColumns = newM;
