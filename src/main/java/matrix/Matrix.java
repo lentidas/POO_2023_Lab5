@@ -5,7 +5,6 @@
 
 // TODO Constructors need to verify modulo is != 0
 // TODO nLines and mColumns need to be >= 0
-// TODO Matrices cannot have negative integers
 // TODO test limit case with empty matrices when doing calculations
 // TODO Report should contain modelisation UML, choices
 
@@ -28,15 +27,15 @@ public class Matrix {
   private final int mColumns;
   private int[][] matrixArray;
 
-  Matrix() {
-    this(new int[0][0], 1); // TODO Add unitary test
+  public Matrix() {
+    this(new int[0][0], 1);
   }
 
   public Matrix(int nLines, int mColumns, int modulus) {
-    if (modulus == 0) { // TODO Add unitary test
+    if (modulus == 0) {
       throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
     }
-    if (nLines < 0 || mColumns < 0) { // TODO Add unitary test
+    if (nLines < 0 || mColumns < 0) {
       throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
     }
 
@@ -48,56 +47,69 @@ public class Matrix {
       this.nLines = nLines;
       this.mColumns = mColumns;
       this.matrixArray = new int[this.nLines][this.mColumns];
-      Random randomInt = new Random();
-      for (int line = 0; line < nLines; ++line) {
-        for (int column = 0; column < mColumns; ++column) {
-          this.matrixArray[line][column] = randomInt.nextInt(modulus);
+      Random random = new Random();
+      int absoluteModulus = Math.abs(this.modulus);
+      for (int line = 0; line < this.nLines; ++line) {
+        for (int column = 0; column < this.mColumns; ++column) {
+          this.matrixArray[line][column] = random.nextBoolean() ? random.nextInt(absoluteModulus)
+              : -random.nextInt(
+                  absoluteModulus); // TODO Verify with Sven if we really want to have negative elements
         }
       }
     }
   }
 
   public Matrix(int[][] matrixArray, int modulus) {
-    if (modulus == 0) { // TODO Add unitary test
+    if (modulus == 0) {
       throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
     }
-    for (int i = 0; i < matrixArray.length - 1; ++i) { // TODO Add unitary test
-      if (matrixArray[i].length != matrixArray[i + 1].length) {
+    for (int line = 0; line < matrixArray.length - 1; ++line) {
+      if (matrixArray[line].length != matrixArray[line + 1].length) {
         throw new IllegalArgumentException(
             "Invalid matrix array! Lines of the matrix are of different size.");
       }
     }
-    for (int[] line : matrixArray) { // TODO Add unitary test
+    int absoluteModulus = Math.abs(modulus);
+    for (int[] line : matrixArray) {
       for (int element : line) {
-        if (element < 0 || element >= modulus) {
+        if (element <= -absoluteModulus || element >= absoluteModulus) {
           throw new IllegalArgumentException(
-              "Invalid matrix array! Elements must be between 0 and modulus - 1.");
+              "Invalid matrix array! Elements must be in the range `-abs(modulus) < element < abs(modulus)`.");
+          // TODO Change comment depending if we only have positive values or not
         }
       }
     }
 
-    this.nLines = matrixArray.length;
-    this.mColumns = matrixArray[0].length;
     this.modulus = modulus;
+    if (matrixArray.length == 0) {
+      this.nLines = this.mColumns = 0;
+    } else {
+      this.nLines = matrixArray.length;
+      this.mColumns = matrixArray[0].length;
+    }
     this.matrixArray = matrixArray;
   }
 
-  Matrix(Matrix matrix) {
+  public Matrix(Matrix matrix) {
     this(matrix, matrix.nLines, matrix.mColumns); // TODO Add unitary test
   }
 
+  // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros
   public Matrix(Matrix matrix, int newN, int newM) {
     if (newN < 0 || newM < 0) { // TODO Add unitary test
       throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
     }
-    // TODO Consider if we should add an exception in the case newN or newM are inferior to
-    //  matrix.nLines or matrix.mColumns or if we should accept it and reduce the matrix.
 
     nLines = newN;
     mColumns = newM;
     modulus = matrix.modulus;
+    matrixArray = new int[this.nLines][this.mColumns];
 
-    // TODO Implement creation of this.matrixArray from matrix.matrixArray with the extra 0 on the end;
+    for (int line = 0; line < Math.min(this.nLines, matrix.nLines); ++line) {
+      for (int column = 0; column < Math.min(this.mColumns, matrix.mColumns); ++column) {
+        this.matrixArray[line][column] = matrix.matrixArray[line][column];
+      }
+    }
   }
 
   public int getN() {
@@ -119,5 +131,21 @@ public class Matrix {
 
   public void printMatrix() {
     // TODO
+  }
+
+  public int getElement(int line, int column) {
+    return this.matrixArray[line][column];
+  }
+
+  public void addTo(Matrix otherMatrix) {
+
+  }
+
+  public void subtractTo(Matrix otherMatrix) {
+
+  }
+
+  public void multiplyBy(Matrix otherMatrix) {
+
   }
 }
