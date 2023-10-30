@@ -13,15 +13,15 @@ public class Addition extends BinaryOperation {
     super();
   }
 
-  public Matrix add(Matrix matrix1, Matrix matrix2) {
-    // TODO Verify that matrix1 and matrix2 are not null
-    // TODO
-    return null;
+  public static Matrix add(Matrix matrix1, Matrix matrix2) {
+    Addition addition = new Addition();
+    return loopAndPerformOperation(matrix1, matrix2, addition);
   }
 
   @Override
-  public int operation(int operand1, int operand2, int modulus) {
-    // TODO
-    return 0;
+  protected int operation(int operand1, int operand2, int modulus) {
+    int addition = operand1 + operand2;
+    int absoluteModulus = Math.abs(modulus);
+    return (Math.floorMod(addition, modulus) + absoluteModulus) % absoluteModulus;
   }
 }
