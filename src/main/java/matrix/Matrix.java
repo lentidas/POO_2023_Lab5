@@ -3,29 +3,17 @@
  * @author Sven Ferreira Silva
  */
 
-// TODO Constructors need to verify modulo is != 0
-// TODO nLines and mColumns need to be >= 0
-// TODO test limit case with empty matrices when doing calculations
-// TODO Report should contain modelisation UML, choices
-
-// TODO Questions to ask:
-//  - Q: Should the explicit constructor verify that every matrix element is strictly positive
-//  - Q: Should the modulus also be positive? I think not, because otherwise the floorMod() usage
-//    would not be necessary...
-//  - Q: I do no see how to implement generic loops for the unary operations like printing the elements
-//    of the matrix or the one to generate matrix with random elements.
-//    A: Prof. Graf says that this is not asked of the laboratory and we can repeat the loops.
-
 package matrix;
 
 import java.util.Random;
+import matrix.binaryOperation.*;
 
 public class Matrix {
 
   private final int modulus;
   private final int nLines;
   private final int mColumns;
-  private int[][] matrixArray;
+  private final int[][] matrixArray;
 
   public Matrix() {
     this(new int[0][0], 1);
@@ -47,13 +35,12 @@ public class Matrix {
       this.nLines = nLines;
       this.mColumns = mColumns;
       this.matrixArray = new int[this.nLines][this.mColumns];
+
       Random random = new Random();
-      int absoluteModulus = Math.abs(this.modulus);
+      final int ABSOLUTE_MODULUS = Math.abs(this.modulus);
       for (int line = 0; line < this.nLines; ++line) {
         for (int column = 0; column < this.mColumns; ++column) {
-          this.matrixArray[line][column] = random.nextBoolean() ? random.nextInt(absoluteModulus)
-              : -random.nextInt(
-                  absoluteModulus); // TODO Verify with Sven if we really want to have negative elements
+          this.matrixArray[line][column] = random.nextInt(ABSOLUTE_MODULUS);
         }
       }
     }
@@ -69,13 +56,12 @@ public class Matrix {
             "Invalid matrix array! Lines of the matrix are of different size.");
       }
     }
-    int absoluteModulus = Math.abs(modulus);
+    final int ABSOLUTE_MODULUS = Math.abs(modulus);
     for (int[] line : matrixArray) {
       for (int element : line) {
-        if (element <= -absoluteModulus || element >= absoluteModulus) {
+        if (element < 0 || element >= ABSOLUTE_MODULUS) {
           throw new IllegalArgumentException(
-              "Invalid matrix array! Elements must be in the range `-abs(modulus) < element < abs(modulus)`.");
-          // TODO Change comment depending if we only have positive values or not
+              "Invalid matrix array! Elements must be in the range `0 <= element < abs(modulus)`.");
         }
       }
     }
@@ -90,13 +76,20 @@ public class Matrix {
     this.matrixArray = matrixArray;
   }
 
+  // TODO Add comment saying that this throws the same exceptions as the resize constructor
+  //  but it should not be a problem since the current matrix should already be valid and contain
+  //  proper nLines and mColumn values.
+  //  Also, there is no validation of the parameter matrix, as it should already have been
+  //  validated by the rest of the code.
   public Matrix(Matrix matrix) {
-    this(matrix, matrix.nLines, matrix.mColumns); // TODO Add unitary test
+    this(matrix, matrix.nLines, matrix.mColumns); // TODO Add unitary test?
   }
 
-  // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros
+  // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros.
+  //  Also, there is no validation of the parameter matrix, as it should already have been
+  //  validated by the rest of the code.
   public Matrix(Matrix matrix, int newN, int newM) {
-    if (newN < 0 || newM < 0) { // TODO Add unitary test
+    if (newN < 0 || newM < 0) {
       throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
     }
 
@@ -105,8 +98,11 @@ public class Matrix {
     modulus = matrix.modulus;
     matrixArray = new int[this.nLines][this.mColumns];
 
-    for (int line = 0; line < Math.min(this.nLines, matrix.nLines); ++line) {
-      for (int column = 0; column < Math.min(this.mColumns, matrix.mColumns); ++column) {
+    final int MIN_LINES = Math.min(this.nLines, matrix.nLines);
+    final int MIN_COLUMNS = Math.min(this.mColumns, matrix.mColumns);
+
+    for (int line = 0; line < MIN_LINES; ++line) {
+      for (int column = 0; column < MIN_COLUMNS; ++column) {
         this.matrixArray[line][column] = matrix.matrixArray[line][column];
       }
     }
@@ -137,15 +133,28 @@ public class Matrix {
     return this.matrixArray[line][column];
   }
 
-  public void addTo(Matrix otherMatrix) {
+  // TODO Implement swaps to use on the intrinsic operations below
+  // TODO Implement also single parameter swap
 
+  public void swap(Matrix otherMatrix) {
+    int nLinesTemp = otherMatrix.nLines;
+    int mColumnsTemp = otherMatrix.mColumns;
+    int modulusTemp = otherMatrix.modulus;
+    int[][] tempMatrixArray = otherMatrix.matrixArray;
+
+    // FIXME I do not know what it is best to do... Maybe a private setter?
+//    nLines = otherMatrix.nLines;
+  }
+
+  public void addTo(Matrix otherMatrix) {
+//    this = Addition.add(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
   }
 
   public void subtractTo(Matrix otherMatrix) {
-
+//    this = Subtraction.subtract(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
   }
 
   public void multiplyBy(Matrix otherMatrix) {
-
+//    this = Multiplication.multiply(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
   }
 }
