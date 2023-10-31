@@ -11,9 +11,9 @@ import matrix.binaryOperation.*;
 public class Matrix {
 
   private final int modulus;
-  private int nLines;
-  private int mColumns;
-  private int[][] matrixArray;
+  private final int nLines;
+  private final int mColumns;
+  private final int[][] matrixArray;
 
   public Matrix() {
     this(new int[0][0], 1);
@@ -124,35 +124,22 @@ public class Matrix {
 
   public void printMatrix() {
     for (int line = 0; line < nLines; ++line) {
-      for(int column = 0; column < mColumns; ++column) {
+      for (int column = 0; column < mColumns; ++column) {
         System.out.print(matrixArray[line][column] + " ");
       }
       System.out.println();
     }
   }
 
-  private void setValuesFromResult(Matrix otherMatrix) {
-    if (otherMatrix == null) {
-      throw new IllegalArgumentException(); // TODO Add description
-    }
-
-    nLines = otherMatrix.nLines;
-    mColumns = otherMatrix.mColumns;
-    matrixArray = otherMatrix.matrixArray;
+  public Matrix addTo(Matrix otherMatrix) {
+    return Addition.add(this, otherMatrix);
   }
 
-  public void addTo(Matrix otherMatrix) {
-    Matrix result = Addition.add(this, otherMatrix);
-    this.setValuesFromResult(result);
+  public Matrix subtractWith(Matrix otherMatrix) {
+    return Subtraction.subtract(this, otherMatrix);
   }
 
-  public void subtractWith(Matrix otherMatrix) {
-    Matrix result = Subtraction.subtract(this, otherMatrix);
-    this.setValuesFromResult(result);
-  }
-
-  public void multiplyBy(Matrix otherMatrix) {
-    Matrix result = Multiplication.multiply(this, otherMatrix);
-    this.setValuesFromResult(result);
+  public Matrix multiplyBy(Matrix otherMatrix) {
+    return Multiplication.multiply(this, otherMatrix);
   }
 }
