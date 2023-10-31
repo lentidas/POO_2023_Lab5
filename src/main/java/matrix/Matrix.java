@@ -3,65 +3,107 @@
  * @author Sven Ferreira Silva
  */
 
-// TODO Constructors need to verify modulo is != 0
-// TODO nLines and mColumns need to be >= 0
-// TODO Matrices cannot have negative integers
-// TODO test limit case with empty matrices when doing calculations
-// TODO Report should contain modelisation UML, choices
-
-// TODO Questions to ask:
-//  - Q: Should the explicit constructor verify that every matrix element is strictly positive
-//  - Q: Should the modulus also be positive? I think not, because otherwise the floorMod() usage
-//    would not be necessary...
-//  - Q: I do no see how to implement generic loops for the unary operations like printing the elements
-//    of the matrix or the one to generate matrix with random elements.
-//    A: Prof. Graf says that this is not asked of the laboratory and we can repeat the loops.
-
 package matrix;
+
+import java.util.Random;
+import matrix.binaryOperation.*;
 
 public class Matrix {
 
   private final int modulus;
   private final int nLines;
   private final int mColumns;
-  private int[][] matrixArray;
+  private final int[][] matrixArray;
 
-  Matrix() {
+  public Matrix() {
     this(new int[0][0], 1);
   }
 
-  Matrix(int nLines, int mColumns, int modulus) {
-    // TODO Add exception if modulus equals 0 or if nLines/mColumns is negative
+  public Matrix(int nLines, int mColumns, int modulus) {
+    if (modulus <= 0) {
+      throw new IllegalArgumentException("Modulus should be strictly greater than 0.");
+    }
+    if (nLines < 0 || mColumns < 0) {
+      throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
+    }
 
     this.modulus = modulus;
-    this.nLines = nLines;
-    this.mColumns = mColumns;
-    this.matrixArray = new int[nLines][mColumns];
+    if (nLines == 0 || mColumns == 0) {
+      this.nLines = this.mColumns = 0;
+      this.matrixArray = new int[this.nLines][this.mColumns];
+    } else {
+      this.nLines = nLines;
+      this.mColumns = mColumns;
+      this.matrixArray = new int[this.nLines][this.mColumns];
 
-    // TODO Implement creation of random matrixArray
+      Random random = new Random();
+      for (int line = 0; line < this.nLines; ++line) {
+        for (int column = 0; column < this.mColumns; ++column) {
+          this.matrixArray[line][column] = random.nextInt(modulus);
+        }
+      }
+    }
   }
 
-  Matrix(int[][] matrixArray, int modulus) {
-    // TODO Add exception if modulus equals 0
+  public Matrix(int[][] matrixArray, int modulus) {
+    if (modulus <= 0) {
+      throw new IllegalArgumentException("Modulus should be strictly greater than 0.");
+    }
+    for (int line = 0; line < matrixArray.length - 1; ++line) {
+      if (matrixArray[line].length != matrixArray[line + 1].length) {
+        throw new IllegalArgumentException(
+            "Invalid matrix array! Lines of the matrix are of different size.");
+      }
+    }
+    for (int[] line : matrixArray) {
+      for (int element : line) {
+        if (element < 0 || element >= modulus) {
+          throw new IllegalArgumentException(
+              "Invalid matrix array! Elements must be in the range `0 <= element < modulus`.");
+        }
+      }
+    }
 
-    this.nLines = matrixArray.length;
-    this.mColumns = matrixArray[0].length;
     this.modulus = modulus;
+    if (matrixArray.length == 0) {
+      this.nLines = this.mColumns = 0;
+    } else {
+      this.nLines = matrixArray.length;
+      this.mColumns = matrixArray[0].length;
+    }
     this.matrixArray = matrixArray;
   }
 
-  Matrix(Matrix matrix) {
+  // TODO Add comment saying that this throws the same exceptions as the resize constructor
+  //  but it should not be a problem since the current matrix should already be valid and contain
+  //  proper nLines and mColumn values.
+  //  Also, there is no validation of the parameter matrix, as it should already have been
+  //  validated by the rest of the code.
+  public Matrix(Matrix matrix) {
     this(matrix, matrix.nLines, matrix.mColumns);
   }
 
-  Matrix(Matrix matrix, int newN, int newM) {
-    // TODO Add exception if nLines/mColumns is negative
+  // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros.
+  //  Also, there is no validation of the parameter matrix, as it should already have been
+  //  validated by the rest of the code.
+  public Matrix(Matrix matrix, int newN, int newM) {
+    if (newN < 0 || newM < 0) {
+      throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
+    }
 
     nLines = newN;
     mColumns = newM;
     modulus = matrix.modulus;
+    matrixArray = new int[this.nLines][this.mColumns];
 
-    // TODO Implement creation of this.matrixArray from matrix.matrixArray with the extra 0 on the end;
+    final int MIN_LINES = Math.min(this.nLines, matrix.nLines);
+    final int MIN_COLUMNS = Math.min(this.mColumns, matrix.mColumns);
+
+    for (int line = 0; line < MIN_LINES; ++line) {
+      for (int column = 0; column < MIN_COLUMNS; ++column) {
+        this.matrixArray[line][column] = matrix.matrixArray[line][column];
+      }
+    }
   }
 
   public int getN() {
@@ -76,12 +118,28 @@ public class Matrix {
     return modulus;
   }
 
-  public String toString() {
-    // TODO
-    return null;
+  public int getElement(int line, int column) {
+    return this.matrixArray[line][column];
   }
 
   public void printMatrix() {
-    // TODO
+    for (int line = 0; line < nLines; ++line) {
+      for (int column = 0; column < mColumns; ++column) {
+        System.out.print(matrixArray[line][column] + " ");
+      }
+      System.out.println();
+    }
+  }
+
+  public Matrix addTo(Matrix otherMatrix) {
+    return Addition.add(this, otherMatrix);
+  }
+
+  public Matrix subtractWith(Matrix otherMatrix) {
+    return Subtraction.subtract(this, otherMatrix);
+  }
+
+  public Matrix multiplyBy(Matrix otherMatrix) {
+    return Multiplication.multiply(this, otherMatrix);
   }
 }
