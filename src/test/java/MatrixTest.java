@@ -20,7 +20,7 @@ public class MatrixTest {
 
   @Test
   public void testRandomConstructor() {
-    final int[][] MATRIX_SPECIFICATIONS = {{0, 0, 1}, {2, 2, -2}, {4, 4, 4}};
+    final int[][] MATRIX_SPECIFICATIONS = {{0, 0, 1}, {2, 2, 2}, {4, 4, 4}};
 
     for (int[] SPECIFICATION : MATRIX_SPECIFICATIONS) {
       int nLines = SPECIFICATION[0],
@@ -33,12 +33,11 @@ public class MatrixTest {
       Assertions.assertEquals(mColumns, randomMatrix.getM());
       Assertions.assertEquals(modulus, randomMatrix.getModulus());
 
-      // Test that the random values are in the proper range (i.e. 0 <= element < abs(modulus)).
-      final int ABSOLUTE_MODULUS = Math.abs(modulus);
+      // Test that the random values are in the proper range (i.e. 0 <= element < modulus).
       for (int line = 0; line < nLines; ++line) {
         for (int column = 0; column < mColumns; ++column) {
           Assertions.assertTrue(randomMatrix.getElement(line, column) >= 0
-              && randomMatrix.getElement(line, column) < ABSOLUTE_MODULUS);
+              && randomMatrix.getElement(line, column) < modulus);
         }
       }
     }
@@ -72,16 +71,14 @@ public class MatrixTest {
 
   @Test
   public void testArrayConstructorExceptions() {
-    final int[][] TEST_ARRAY_1 = {{0, 1}, {1, 0}}, // Valid matrix but to use with nul modulus.
+    final int[][] TEST_ARRAY_1 = {{0, 1}, {1, 0}}, // Valid matrix but to use with null modulus.
         TEST_ARRAY_2 = {{0, 1, 0}, {1, 0, 1, 0}}, // Matrix with lines with different lengths.
         TEST_ARRAY_3 = {{0, 1, 0, 1}, {-1, 0, 1, 1}, {0, 1, 1, 0}}, // Matrix with negative values.
-        TEST_ARRAY_4 = {{0, 1}, {2, 1}}, // Matrix with value outside range (modulus 2).
-        TEST_ARRAY_5 = {{0, 1}, {2, 1}}; // Matrix with value outside range (modulus -2).
+        TEST_ARRAY_4 = {{0, 1}, {2, 1}}; // Matrix with value outside range (modulus 2).
 
     // Bunch up all the arrays inside a single one and create another array with the modulus to test.
-    final int[][][] TEST_MATRICES = {TEST_ARRAY_1, TEST_ARRAY_2, TEST_ARRAY_3, TEST_ARRAY_4,
-        TEST_ARRAY_5};
-    final int[] TEST_MODULUS = {0, 2, 2, 2, -2};
+    final int[][][] TEST_MATRICES = {TEST_ARRAY_1, TEST_ARRAY_2, TEST_ARRAY_3, TEST_ARRAY_4};
+    final int[] TEST_MODULUS = {0, 2, 2, 2};
 
     for (int index = 0; index < TEST_MATRICES.length; ++index) {
       final int finalIndex = index;

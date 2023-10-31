@@ -28,7 +28,6 @@ public abstract class BinaryOperation {
         resultModulus = matrix1.getModulus();
 
     if (matrix1.getN() != matrix2.getN() || matrix1.getM() != matrix2.getM()) {
-      // TODO Verify if it is good practice to create these temporary variables to avoid calling Math.max() multiple times.
       resultN = Math.max(matrix1.getN(), matrix2.getN());
       resultM = Math.max(matrix1.getM(), matrix2.getM());
       matrix1 = new Matrix(matrix1, resultN, resultM);

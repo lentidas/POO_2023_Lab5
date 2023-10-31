@@ -20,8 +20,6 @@ public class Multiplication extends BinaryOperation {
 
   @Override
   protected int operation(int operand1, int operand2, int modulus) {
-    int multiplication = operand1 + operand2;
-    int absoluteModulus = Math.abs(modulus);
-    return (Math.floorMod(multiplication, modulus) + absoluteModulus) % absoluteModulus;
+    return (operand1 * operand2) % modulus;
   }
 }

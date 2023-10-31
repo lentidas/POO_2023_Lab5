@@ -11,17 +11,17 @@ import matrix.binaryOperation.*;
 public class Matrix {
 
   private final int modulus;
-  private final int nLines;
-  private final int mColumns;
-  private final int[][] matrixArray;
+  private int nLines;
+  private int mColumns;
+  private int[][] matrixArray;
 
   public Matrix() {
     this(new int[0][0], 1);
   }
 
   public Matrix(int nLines, int mColumns, int modulus) {
-    if (modulus == 0) {
-      throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
+    if (modulus <= 0) {
+      throw new IllegalArgumentException("Modulus should be strictly greater than 0.");
     }
     if (nLines < 0 || mColumns < 0) {
       throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");
@@ -37,18 +37,17 @@ public class Matrix {
       this.matrixArray = new int[this.nLines][this.mColumns];
 
       Random random = new Random();
-      final int ABSOLUTE_MODULUS = Math.abs(this.modulus);
       for (int line = 0; line < this.nLines; ++line) {
         for (int column = 0; column < this.mColumns; ++column) {
-          this.matrixArray[line][column] = random.nextInt(ABSOLUTE_MODULUS);
+          this.matrixArray[line][column] = random.nextInt(modulus);
         }
       }
     }
   }
 
   public Matrix(int[][] matrixArray, int modulus) {
-    if (modulus == 0) {
-      throw new IllegalArgumentException("Modulus cannot be nul because we cannot divide by 0.");
+    if (modulus <= 0) {
+      throw new IllegalArgumentException("Modulus should be strictly greater than 0.");
     }
     for (int line = 0; line < matrixArray.length - 1; ++line) {
       if (matrixArray[line].length != matrixArray[line + 1].length) {
@@ -56,12 +55,11 @@ public class Matrix {
             "Invalid matrix array! Lines of the matrix are of different size.");
       }
     }
-    final int ABSOLUTE_MODULUS = Math.abs(modulus);
     for (int[] line : matrixArray) {
       for (int element : line) {
-        if (element < 0 || element >= ABSOLUTE_MODULUS) {
+        if (element < 0 || element >= modulus) {
           throw new IllegalArgumentException(
-              "Invalid matrix array! Elements must be in the range `0 <= element < abs(modulus)`.");
+              "Invalid matrix array! Elements must be in the range `0 <= element < modulus`.");
         }
       }
     }
@@ -124,7 +122,7 @@ public class Matrix {
     return this.matrixArray[line][column];
   }
 
-  public void printMatrix() { // TODO Add test?
+  public void printMatrix() {
     for (int line = 0; line < nLines; ++line) {
       for(int column = 0; column < mColumns; ++column) {
         System.out.print(matrixArray[line][column] + " ");
@@ -133,28 +131,28 @@ public class Matrix {
     }
   }
 
-  // TODO Implement swaps to use on the intrinsic operations below
-  // TODO Implement also single parameter swap
+  private void setValuesFromResult(Matrix otherMatrix) {
+    if (otherMatrix == null) {
+      throw new IllegalArgumentException(); // TODO Add description
+    }
 
-  public void swap(Matrix otherMatrix) {
-    int nLinesTemp = otherMatrix.nLines;
-    int mColumnsTemp = otherMatrix.mColumns;
-    int modulusTemp = otherMatrix.modulus;
-    int[][] tempMatrixArray = otherMatrix.matrixArray;
-
-    // FIXME I do not know what it is best to do... Maybe a private setter?
-//    nLines = otherMatrix.nLines;
+    nLines = otherMatrix.nLines;
+    mColumns = otherMatrix.mColumns;
+    matrixArray = otherMatrix.matrixArray;
   }
 
   public void addTo(Matrix otherMatrix) {
-//    this = Addition.add(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
+    Matrix result = Addition.add(this, otherMatrix);
+    this.setValuesFromResult(result);
   }
 
-  public void subtractTo(Matrix otherMatrix) {
-//    this = Subtraction.subtract(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
+  public void subtractWith(Matrix otherMatrix) {
+    Matrix result = Subtraction.subtract(this, otherMatrix);
+    this.setValuesFromResult(result);
   }
 
   public void multiplyBy(Matrix otherMatrix) {
-//    this = Multiplication.multiply(this, otherMatrix); // FIXME Use swap because we cannot do an affectation with this
+    Matrix result = Multiplication.multiply(this, otherMatrix);
+    this.setValuesFromResult(result);
   }
 }

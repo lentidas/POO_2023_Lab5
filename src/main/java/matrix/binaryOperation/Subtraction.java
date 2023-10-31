@@ -20,8 +20,6 @@ public class Subtraction extends BinaryOperation {
 
   @Override
   protected int operation(int operand1, int operand2, int modulus) {
-    int subtraction = operand1 - operand2;
-    int absoluteModulus = Math.abs(modulus);
-    return (Math.floorMod(subtraction, modulus) + absoluteModulus) % absoluteModulus;
+    return Math.floorMod(operand1 - operand2, modulus);
   }
 }
