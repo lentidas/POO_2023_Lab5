@@ -23,15 +23,14 @@ public class BinaryOperationTest {
     Matrix matrix1 = new Matrix(2, 4, 2);
     Matrix matrix2 = new Matrix(4, 2, 2);
     Matrix matrixWithDifferentModulus = new Matrix(4, 4, 4);
-    Matrix matrixNull = null;
 
     Assertions.assertDoesNotThrow(() -> Addition.add(matrix1, matrix2));
     Assertions.assertThrows(RuntimeException.class,
         () -> Addition.add(matrix1, matrixWithDifferentModulus));
     Assertions.assertThrows(RuntimeException.class,
         () -> Addition.add(matrixWithDifferentModulus, matrix2));
-    Assertions.assertThrows(RuntimeException.class, () -> Addition.add(matrix1, matrixNull));
-    Assertions.assertThrows(RuntimeException.class, () -> Addition.add(matrixNull, matrix2));
+    Assertions.assertThrows(RuntimeException.class, () -> Addition.add(matrix1, null));
+    Assertions.assertThrows(RuntimeException.class, () -> Addition.add(null, matrix2));
   }
 
   @Test

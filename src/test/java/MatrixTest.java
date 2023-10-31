@@ -109,7 +109,8 @@ public class MatrixTest {
 
   @Test
   public void testCopyConstructorExceptions() {
-    // TODO Maybe test assert not throws?
+    Matrix testMatrix = new Matrix(8, 8, 8);
+    Assertions.assertDoesNotThrow(() -> new Matrix(testMatrix));
   }
 
   @Test
