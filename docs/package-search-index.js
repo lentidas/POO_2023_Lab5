@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"matrix"},{"l":"matrix.binaryOperation"}];updateSearchResults();
