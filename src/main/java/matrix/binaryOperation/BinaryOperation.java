@@ -1,11 +1,11 @@
+package matrix.binaryOperation;
+
+import matrix.Matrix;
+
 /**
  * @author Gonçalo Carvalheiro Heleno
  * @author Sven Ferreira Silva
  */
-
-package matrix.binaryOperation;
-
-import matrix.Matrix;
 
 public abstract class BinaryOperation {
 
@@ -16,7 +16,7 @@ public abstract class BinaryOperation {
   protected static Matrix loopAndPerformOperation(Matrix matrix1, Matrix matrix2,
       BinaryOperation binaryOperation) {
     if (matrix1 == null || matrix2 == null) {
-      throw new RuntimeException(
+      throw new NullPointerException(
           "Invalid reference! One of the matrices passed as an argument is null.");
     }
     if (matrix1.getModulus() != matrix2.getModulus()) {

@@ -1,12 +1,12 @@
-/**
- * @author Gonçalo Carvalheiro Heleno
- * @author Sven Ferreira Silva
- */
-
 package matrix;
 
 import java.util.Random;
 import matrix.binaryOperation.*;
+
+/**
+ * @author Gonçalo Carvalheiro Heleno
+ * @author Sven Ferreira Silva
+ */
 
 public class Matrix {
 
@@ -74,18 +74,30 @@ public class Matrix {
     this.matrixArray = matrixArray;
   }
 
-  // TODO Add comment saying that this throws the same exceptions as the resize constructor
-  //  but it should not be a problem since the current matrix should already be valid and contain
-  //  proper nLines and mColumn values.
-  //  Also, there is no validation of the parameter matrix, as it should already have been
-  //  validated by the rest of the code.
+  /**
+   * Constructor to copy a Matrix into a new object. This constructor uses the resizing constructor,
+   * but instead of passing new values for {@code nLines} and {@code mColumns}, it simply uses the
+   * current values from the Matrix passed in argument.
+   *
+   * @param matrix The Matrix to be copied.
+   * @implNote
+   * @see matrix.Matrix#Matrix(Matrix, int, int)
+   */
   public Matrix(Matrix matrix) {
     this(matrix, matrix.nLines, matrix.mColumns);
   }
 
-  // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros.
-  //  Also, there is no validation of the parameter matrix, as it should already have been
-  //  validated by the rest of the code.
+  /**
+   * Constructor to create a bigger/smaller Matrix based on the Matrix passed as an argument.
+   * <p>
+   * In the case that the new {@code nLines} or {@code mColumns} is bigger than the current value,
+   * the new positions will be filled with zeros. In the case that these are smaller, then the new
+   * Matrix will be truncated.
+   *
+   * @param matrix The Matrix that is the basis of the new smaller/bigger Matrix.
+   * @param newN   The new number of lines.
+   * @param newM   The new number of columns.
+   */
   public Matrix(Matrix matrix, int newN, int newM) {
     if (newN < 0 || newM < 0) {
       throw new IllegalArgumentException("Number of lines and/or columns cannot be negative.");

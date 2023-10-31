@@ -1,11 +1,11 @@
+package matrix.binaryOperation;
+
+import matrix.Matrix;
+
 /**
  * @author Gonçalo Carvalheiro Heleno
  * @author Sven Ferreira Silva
  */
-
-package matrix.binaryOperation;
-
-import matrix.Matrix;
 
 public class Multiplication extends BinaryOperation {
 
