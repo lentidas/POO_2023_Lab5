@@ -82,7 +82,7 @@ public class Matrix {
   //  Also, there is no validation of the parameter matrix, as it should already have been
   //  validated by the rest of the code.
   public Matrix(Matrix matrix) {
-    this(matrix, matrix.nLines, matrix.mColumns); // TODO Add unitary test?
+    this(matrix, matrix.nLines, matrix.mColumns);
   }
 
   // TODO Add comment about the behavior of this constructor saying that it truncates or adds zeros.
@@ -120,17 +120,17 @@ public class Matrix {
     return modulus;
   }
 
-  public String toString() {
-    // TODO
-    return null;
-  }
-
-  public void printMatrix() {
-    // TODO
-  }
-
   public int getElement(int line, int column) {
     return this.matrixArray[line][column];
+  }
+
+  public void printMatrix() { // TODO Add test?
+    for (int line = 0; line < nLines; ++line) {
+      for(int column = 0; column < mColumns; ++column) {
+        System.out.print(matrixArray[line][column] + " ");
+      }
+      System.out.println();
+    }
   }
 
   // TODO Implement swaps to use on the intrinsic operations below
