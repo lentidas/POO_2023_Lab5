@@ -8,9 +8,30 @@ import matrix.Matrix;
 public class Main {
 
   public static void main(String[] args) {
-    Matrix test = new Matrix(5, 5, -7);
-    Matrix test2 = new Matrix(new int[][]{{1, 2, 0}, {1, 1, 0}}, 3);
-    Matrix test3 = new Matrix(test2, 4,4);
-    Matrix test4 = new Matrix(test2, 1, 2);
+    int[] values = Input.parseInput(args);
+
+    int modulus = values[args.length - 1];
+
+    Matrix matrix1 = new Matrix(values[0], values[1], modulus),
+           matrix2 = new Matrix(values[2], values[3], modulus);
+
+    System.out.println("The modulus is " + modulus);
+    System.out.println("one:");
+    matrix1.printMatrix();
+    System.out.println("\ntwo:");
+    matrix2.printMatrix();
+
+    System.out.println("\none + two:");
+    Matrix result = matrix1.addTo(matrix2);
+    result.printMatrix();
+
+    System.out.println("\none - two:");
+    result = matrix1.subtractWith(matrix2);
+    result.printMatrix();
+
+    System.out.println("\none x two:");
+    result = matrix1.multiplyBy(matrix2);
+    result.printMatrix();
+
   }
 }
