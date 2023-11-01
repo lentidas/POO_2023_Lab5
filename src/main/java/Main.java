@@ -13,9 +13,9 @@ public class Main {
     int modulus = values[args.length - 1];
 
     Matrix matrix1 = new Matrix(values[0], values[1], modulus),
-           matrix2 = new Matrix(values[2], values[3], modulus);
+        matrix2 = new Matrix(values[2], values[3], modulus);
 
-    System.out.println("The modulus is " + modulus);
+    System.out.println("\nThe modulus is " + modulus + ".\n");
     System.out.println("one:");
     matrix1.printMatrix();
     System.out.println("\ntwo:");
